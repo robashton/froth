@@ -17,6 +17,7 @@
     "gift": "0.0.5",
     "npm-registry-client": "~0.2.12",
     "npmconf": "0.0.20",
-    "read-package-json": "~0.1.12"
+    "read-package-json": "~0.1.12",
+    "npmlog": "0.0.2"
   }
 }

@@ -5,6 +5,7 @@ var path = require('path')
 var gift = require('gift')
 var http = require('http')
 var npmconf = require('npmconf')
+var log = require('npmlog')
 var NpmClient = new require('npm-registry-client')
 var readJson = require('read-package-json')
 
@@ -32,7 +33,8 @@ function handleDirectoryCompletion(msg) {
 
 function printMessages() {
   for(var i = 0; i < messages.length; i++) {
-    console.log(messages[i])
+    var message = messages[i]
+    log.log(message.level, message.prefix, message.text)
   }
 }
 
@@ -101,14 +103,38 @@ function checkDirectory(dir, cb) {
 
   function checkAllKnownVariables() {
     if(error) {
-      if(error.code === 'E404') return cb([workingdir, 'is not published'].join(' '))
-      cb([workingdir, error].join(' '))
+      if(error.code === 'E404') return cb({
+        level: 'warn',
+        text: "not a published package",
+        prefix: workingdir
+      })
+      cb({
+        level: 'error',
+        text: error,
+        prefix: workingdir
+      })
     } 
     else if(status && publishedVersion && lastCommit && currentVersion) {
-      if(!status.clean) return cb([workingdir, "Git repository is not clean"].join(' '))
-      if(currentVersion !== publishedVersion) return cb([workingdir, "Current version", currentVersion, "is not equal to published version", publishedVersion].join(' '))
-      if(lastCommit !== currentVersion) return cb([workingdir, "Last commit is not a version bump:", lastCommit].join(' '))
-      cb([workingdir, "is fully up to date and committed"].join(' '))
+      if(!status.clean) return cb({
+        level: 'warn',
+        text: "Git repository is not clean",
+        prefix: workingdir
+      })
+      if(currentVersion !== publishedVersion) return cb({
+        level: 'warn',
+        text: ["Current version", currentVersion, "is not equal to published version", publishedVersion].join(' '),
+        prefix: workingdir
+      })
+      if(lastCommit !== currentVersion) return cb({
+         level: 'warn',
+         text: ["Last commit is not a verson bump: ", '"', lastCommit, '"'].join(''),
+         prefix: workingdir,
+      })
+      cb({
+        level: 'info',
+        text: "fully up to date",
+        prefix: workingdir
+      })
     }
   }
 }
