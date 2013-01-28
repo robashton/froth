@@ -1,0 +1,22 @@
+{
+  "name": "froth",
+  "version": "0.0.1",
+  "description": "ERROR: No README.md file found!",
+  "main": "index.js",
+  "bin": {
+    "froth": "index.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": "",
+  "author": "",
+  "license": "BSD",
+  "dependencies": {
+    "findit": "~0.1.2",
+    "gift": "0.0.5",
+    "npm-registry-client": "~0.2.12",
+    "npmconf": "0.0.20",
+    "read-package-json": "~0.1.12"
+  }
+}
